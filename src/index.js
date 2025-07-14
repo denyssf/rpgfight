@@ -1,8 +1,9 @@
 
-const { introduction, userName } = require('./models/questions');
+const { introduction, userName, userClass, asked0} = require('./models/prompts');
 
 (async function startgame() {
     const confirmQuestion = await introduction();
     const user = await userName();
-    console.log(`Welcome, ${user}!`);
+    const chosenClass = await userClass();
+    const asked = await asked0();
 })();
