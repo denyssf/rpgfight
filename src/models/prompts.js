@@ -1,7 +1,9 @@
 const inquirer = require('inquirer');
 const classers = require('./classes');
 const player = require('./currentPlayer');
-const sleep = require('../utils/sleep');
+const sleep = require ('../utils/sleep');
+const validadeYn = require('../utils/validadeYn');
+const askOnlyLettersName = require('../utils/askOnluLettersName');
 
 async function introduction() {
     console.clear();
@@ -10,35 +12,23 @@ async function introduction() {
     await sleep(3000);
     console.log("In this game, you'll face a series of challenges inside a mysterious dungeon.\n");
     await sleep(3000);
-const request = await inquirer.prompt([
-    {
-      type: 'confirm',
-      name: 'confirmQuestion',
-      message: '\nDo you want to listen to the dungeon story?\nPlease answer with Yes or No:',
-      default: false
-    }
-  ]);
-    if (request.confirmQuestion === true) {
-        await sleep(3000);
-        console.log("\nYou are a seasoned explorer. One day, the king of a great city summons five of the best adventurers to investigate a mysterious dungeon that has appeared within his kingdom.\nIts strange architecture and unknown origin suggest it's not from this world...\nDriven by curiosity and the promise of riches, you accept the challenge to conquer its depths.\n");
-    } else {
-        await sleep(3000);
-        console.log("\nYou chose to skip the story. Let's continue!");
-    }
-   return request.confirmQuestion;
+const wantsStory = await validadeYn('\nDo you want to listen to the dungeon story? (yes or no):');
+
+  await sleep(2000);
+  if (wantsStory) {
+    console.log("\nYou are a dungeon explorer, and the king of a great city summons five\nof the best explorers to conquer the great dungeon that has appeared in his kingdom.\nIt has a peculiar shape and no one can explain its existence, as if it were something\nfrom another world and not just any dungeon. You bravely accept to go, because the reward\nis great and you, as a great explorer, feel the desire to explore it and conquer its riches and kill\nthe mythical monsters that exist within it.\n");
+  } else {
+    console.log("\nYou chose to skip the story. Let's continue!");
+  }
+
+  return wantsStory;
 }
 
 async function userName() {
 await sleep(3000);
-const questionName = await inquirer.prompt([
-    {
-      type: 'input',
-      name: 'user',
-      message: '\nBefore we begin, what is your name?:',
-    },
-  ]);
-  player.name = questionName.user;
-  return questionName.user;
+const name = await askOnlyLettersName('\nSo without further ado, what would your name be?\nPlease enter your name (letters only):');
+  player.name = name;
+  return name;
 }
 
 async function userClass(){
@@ -67,7 +57,10 @@ async function userClass(){
   return questionClass.class;
 }
 
-async function asked0() {
+async function asked00() {
+  await sleep(3000);
+  console.clear();
+  console.log(`\nYou are ${player.name}, a brave ${player.className} ready to explore the dungeon.\n`);
   await sleep(3000);
   console.log('\nAnd it all begins in a small village called Clover, surrounded by\nmountains, tranquility reigns in this village, and in a modest house\nwith only 3 rooms, a small vegetable garden, our story begins.\n');
   await sleep(3000);
@@ -124,5 +117,25 @@ async function asked0() {
   }
 }
 
+async function asked01() {
+  await sleep(3000);
+  console.log("\nAfter waking up, you decide to prepare for the trip by packing your things.");
+  await sleep(3000);
 
-module.exports = { introduction, userName, userClass, asked0};
+  const showBackpack = await validadeYn('\nDo you want to see your backpack contents? (yes or no):');
+
+  if (showBackpack) {
+    await sleep(5000);
+    console.clear();
+    console.log("\nYour backpack contains:\n");
+    console.log(`- ${player.bag}`);
+    console.log("Nothing in here... Good thing I checked. Now I can organize my stuff.");
+    await sleep(3000);
+  } else {
+    console.log("\nYou chose not to see your backpack contents. Let's continue!");
+  }
+}
+
+
+
+module.exports = { introduction, userName, userClass, asked00, asked01 };
